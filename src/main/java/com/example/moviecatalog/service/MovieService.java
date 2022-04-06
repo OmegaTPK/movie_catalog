@@ -1,4 +1,4 @@
 package com.example.moviecatalog.service;
 
-public class MovieCatalog {
+public class MovieService {
 }
