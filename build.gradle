@@ -3,7 +3,31 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
 }
+task runApp(type: JavaExec) {
+	classpath = sourceSets.main.runtimeClasspath
 
+	mainClass = 'com.example.moviecatalog.MovieCatalogApplication'
+
+	// arguments to pass to the application
+	args 'appArg1'
+}
+
+// Using and creating an Executable Jar
+jar {
+	manifest {
+		attributes('Main-Class': 'com.example.moviecatalog.MovieCatalogApplication')
+	}
+}
+
+task runExecutableJar(type: JavaExec) {
+	// Executable jars can have only _one_ jar on the classpath.
+	classpath = files(tasks.jar)
+
+	// 'main' does not need to be specified
+
+	// arguments to pass to the application
+	args 'appArg1'
+}
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
@@ -13,11 +37,17 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework:spring-web:5.3.17'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.postgresql:postgresql:42.3.3'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.6.5'
+	implementation 'org.flywaydb:flyway-core:8.5.7'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test:2.6.5'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+
+
