@@ -14,14 +14,18 @@ import java.util.List;
 @RestController
 @RequestMapping
 public class MovieController {
-    @Autowired
+
     private MovieService movieService;
-    @Autowired
     private MovieDao movieDao;
 
-    @GetMapping
-    public List<MovieDto> findAllMovies() {
+    @Autowired
+    public MovieController(MovieService movieService, MovieDao movieDao) {
+        this.movieService = movieService;
+        this.movieDao = movieDao;
+    }
 
+    @GetMapping("/movies")
+    public List<MovieDto> findAllMovies() {
         return movieService.getMovies();
     }
 }

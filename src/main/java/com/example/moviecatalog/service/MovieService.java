@@ -11,10 +11,15 @@ import java.util.List;
 
 @Component
 public class MovieService {
-    @Autowired
+
     private MovieDao movieDao;
-    @Autowired
     private MovieConverter movieConverter;
+
+    @Autowired
+    public MovieService(MovieDao movieDao, MovieConverter movieConverter) {
+        this.movieDao = movieDao;
+        this.movieConverter = movieConverter;
+    }
 
     public List<MovieDto> getMovies() {
         List<MovieEntity> entities = (List<MovieEntity>) movieDao.findAll();

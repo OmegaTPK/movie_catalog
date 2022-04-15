@@ -1,28 +1,28 @@
 package com.example.moviecatalog.entity;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.Instant;
 
 @Entity
 public class MovieEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @Column(nullable = false)
     private Long id;
-    @Column(name = "name", nullable = false)
+    @Column(nullable = false)
     private String name;
-    @Column(name = "year", nullable = false)
-    private Date year;
-    @Column(name = "description", nullable = false, length = 2000)
+    @Column(nullable = false)
+    private Instant year;
+    @Column(nullable = false, length = 2000)
     private String description;
-    @Column(name = "rate", nullable = false)
+    @Column(nullable = false)
     private Double rate;
 
     public MovieEntity() {
 
     }
 
-    public MovieEntity(Long id, String name, Date year, String description, Double rate) {
+    public MovieEntity(Long id, String name, Instant year, String description, Double rate) {
         this.id = id;
         this.name = name;
         this.year = year;
@@ -34,7 +34,7 @@ public class MovieEntity {
         return description;
     }
 
-    public Date getYear() {
+    public Instant getYear() {
         return year;
     }
 
