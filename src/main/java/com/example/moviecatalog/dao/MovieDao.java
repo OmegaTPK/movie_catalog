@@ -1,4 +1,7 @@
 package com.example.moviecatalog.dao;
 
-public interface MovieDao {
+import com.example.moviecatalog.entity.MovieEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface MovieDao extends JpaRepository<MovieEntity, Long> {
 }
