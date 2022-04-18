@@ -1,5 +1,7 @@
 package com.example.moviecatalog.dto;
 
+import org.springframework.lang.NonNull;
+
 import java.io.Serializable;
 import java.time.Instant;
 
@@ -10,7 +12,7 @@ public class MovieDto implements Serializable {
     private final String description;
     private final Double rate;
 
-    public MovieDto(Long id, String name, String description, Double rate, Instant year) {
+    public MovieDto(Long id, @NonNull String name, @NonNull String description, @NonNull Double rate, @NonNull Instant year) {
         this.id = id;
         this.name = name;
         this.year = year;

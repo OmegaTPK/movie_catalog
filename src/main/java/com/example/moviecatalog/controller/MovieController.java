@@ -5,9 +5,8 @@ import com.example.moviecatalog.dao.MovieDao;
 import com.example.moviecatalog.dto.MovieDto;
 import com.example.moviecatalog.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,7 +24,17 @@ public class MovieController {
     }
 
     @GetMapping("/movies")
-    public List<MovieDto> findAllMovies() {
+    public ResponseEntity<List<MovieDto>> findAllMovies() {
         return movieService.getMovies();
+    }
+
+    @PostMapping("/add_movie")
+    public ResponseEntity<MovieDto> addMovie(@RequestBody MovieDto movieDto) {
+        return movieService.addMovie(movieDto);
+    }
+
+    @DeleteMapping("/delete_movie")
+    public ResponseEntity deleteMovie(@RequestParam Long id) {
+        return movieService.deleteMovie(id);
     }
 }
