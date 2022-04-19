@@ -28,12 +28,12 @@ public class MovieController {
         return movieService.getMovies();
     }
 
-    @PostMapping("/add_movie")
+    @PostMapping("/movie/add")
     public ResponseEntity<MovieDto> addMovie(@RequestBody MovieDto movieDto) {
         return movieService.addMovie(movieDto);
     }
 
-    @DeleteMapping("/delete_movie")
+    @DeleteMapping("/movie/delete")
     public ResponseEntity deleteMovie(@RequestParam Long id) {
         return movieService.deleteMovie(id);
     }
