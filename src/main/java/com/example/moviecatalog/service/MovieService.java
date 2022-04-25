@@ -31,14 +31,24 @@ public class MovieService {
         MovieEntity movieEntity = movieConverter.convert(movieDto);
         movieEntity.setId(null);
         movieEntity = movieDao.save(movieEntity);
-
         return movieConverter.convert(movieEntity);
     }
 
     public void deleteMovie(@NonNull Long id) {
+        //TODO redo with exception usage throw if can't delete
         if (movieExistById(id)) {
             movieDao.deleteById(id);
         }
+    }
+
+    public MovieDto updateMovie(MovieDto dto) {
+        //TODO redo with exception usage throw if movie not exist
+        MovieEntity entity = movieConverter.convert(dto);
+        MovieDto result = null;
+        if (movieExistById(entity.getId())) {
+            result = movieConverter.convert(movieDao.save(entity));
+        }
+        return result;
     }
 
     private Boolean movieExistById(Long movieId) {

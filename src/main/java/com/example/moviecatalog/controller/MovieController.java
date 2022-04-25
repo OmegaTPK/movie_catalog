@@ -39,4 +39,10 @@ public class MovieController {
         movieService.deleteMovie(id);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping
+    public ResponseEntity<MovieDto> updateMovie(@RequestBody MovieDto movieDto) {
+        MovieDto responseDto = movieService.updateMovie(movieDto);
+        return ResponseEntity.ok().body(responseDto);
+    }
 }
