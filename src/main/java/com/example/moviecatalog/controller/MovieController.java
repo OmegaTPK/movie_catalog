@@ -28,13 +28,13 @@ public class MovieController {
         return ResponseEntity.ok(movieService.getMovies());
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<MovieDto> addMovie(@RequestBody MovieDto movieDto) {
         MovieDto result = movieService.addMovie(movieDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping
     public ResponseEntity deleteMovie(@RequestParam Long id) {
         movieService.deleteMovie(id);
         return ResponseEntity.ok().build();

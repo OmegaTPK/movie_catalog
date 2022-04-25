@@ -28,16 +28,11 @@ public class MovieService {
     }
 
     public MovieDto addMovie(@NonNull MovieDto movieDto) {
-
         MovieEntity movieEntity = movieConverter.convert(movieDto);
         movieEntity.setId(null);
-        movieEntity = saveMovie(movieEntity);
+        movieEntity = movieDao.save(movieEntity);
 
         return movieConverter.convert(movieEntity);
-    }
-
-    private MovieEntity saveMovie(MovieEntity movieEntity) {
-        return movieDao.save(movieEntity);
     }
 
     public void deleteMovie(@NonNull Long id) {
