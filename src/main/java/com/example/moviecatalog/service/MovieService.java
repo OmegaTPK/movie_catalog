@@ -5,6 +5,7 @@ import com.example.moviecatalog.dao.MovieDao;
 import com.example.moviecatalog.dto.MovieDto;
 import com.example.moviecatalog.entity.MovieEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -23,6 +24,24 @@ public class MovieService {
 
     public List<MovieDto> getMovies() {
         List<MovieEntity> entities = (List<MovieEntity>) movieDao.findAll();
-        return movieConverter.convert(entities);
+        return movieConverter.convertEntities(entities);
+    }
+
+    public MovieDto addMovie(@NonNull MovieDto movieDto) {
+        MovieEntity movieEntity = movieConverter.convert(movieDto);
+        movieEntity.setId(null);
+        movieEntity = movieDao.save(movieEntity);
+
+        return movieConverter.convert(movieEntity);
+    }
+
+    public void deleteMovie(@NonNull Long id) {
+        if (movieExistById(id)) {
+            movieDao.deleteById(id);
+        }
+    }
+
+    private Boolean movieExistById(Long movieId) {
+        return movieId != null && movieDao.existsById(movieId);
     }
 }
