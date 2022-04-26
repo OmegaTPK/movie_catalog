@@ -41,11 +41,12 @@ public class MovieService {
         }
     }
 
-    public MovieDto updateMovie(MovieDto dto) {
+    public MovieDto updateMovie(MovieDto dto, long id) {
         //TODO redo with exception usage throw if movie not exist
-        MovieEntity entity = movieConverter.convert(dto);
         MovieDto result = null;
-        if (movieExistById(entity.getId())) {
+        if (movieExistById(id)) {
+            MovieEntity entity = movieConverter.convert(dto);
+            entity.setId(id);
             result = movieConverter.convert(movieDao.save(entity));
         }
         return result;
