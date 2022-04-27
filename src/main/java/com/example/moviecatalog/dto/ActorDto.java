@@ -15,11 +15,12 @@ public class ActorDto implements Serializable {
     private Instant birthDate;
     private Instant activeStartDate;
     private String birthPlace;
+    private String description;
 
     public ActorDto() {
     }
 
-    public ActorDto(Long id, String name, String surname, String middleName, Gender gender, Instant birthDate, Instant activeStartDate, String birthPlace) {
+    public ActorDto(Long id, String name, String surname, String middleName, Gender gender, Instant birthDate, Instant activeStartDate, String birthPlace, String description) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -28,6 +29,7 @@ public class ActorDto implements Serializable {
         this.birthDate = birthDate;
         this.activeStartDate = activeStartDate;
         this.birthPlace = birthPlace;
+        this.description = description;
     }
 
     public Long getId() {
@@ -92,6 +94,14 @@ public class ActorDto implements Serializable {
 
     public void setBirthPlace(String birthPlace) {
         this.birthPlace = birthPlace;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override

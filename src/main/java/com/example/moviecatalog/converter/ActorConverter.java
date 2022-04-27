@@ -15,7 +15,8 @@ public class ActorConverter {
                 entity.getGender(),
                 entity.getBirthDate(),
                 entity.getActiveStartDate(),
-                entity.getBirthPlace());
+                entity.getBirthPlace(),
+                entity.getDescription());
     }
 
     public ActorEntity convert(ActorDto dto) {
@@ -26,6 +27,7 @@ public class ActorConverter {
                 dto.getGender(),
                 dto.getBirthDate(),
                 dto.getActiveStartDate(),
-                dto.getBirthPlace());
+                dto.getBirthPlace(),
+                dto.getDescription());
     }
 }

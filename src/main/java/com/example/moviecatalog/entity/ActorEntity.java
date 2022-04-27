@@ -27,11 +27,13 @@ public class ActorEntity {
     private Instant activeStartDate;
     @Column(nullable = false, length = 500)
     private String birthPlace;
+    @Column(nullable = false, length = 2000)
+    private String description;
 
     public ActorEntity() {
     }
 
-    public ActorEntity(Long id, String name, String surname, String middleName, Gender gender, Instant birthDate, Instant activeStartDate, String birthPlace) {
+    public ActorEntity(Long id, String name, String surname, String middleName, Gender gender, Instant birthDate, Instant activeStartDate, String birthPlace, String description) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -40,6 +42,7 @@ public class ActorEntity {
         this.birthDate = birthDate;
         this.activeStartDate = activeStartDate;
         this.birthPlace = birthPlace;
+        this.description = description;
     }
 
     public void setSurname(String surname) {
@@ -104,5 +107,13 @@ public class ActorEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
