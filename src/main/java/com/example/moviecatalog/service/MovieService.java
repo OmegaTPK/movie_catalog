@@ -41,7 +41,7 @@ public class MovieService {
         }
     }
 
-    public MovieDto updateMovie(MovieDto dto, long id) {
+    public MovieDto updateMovie(MovieDto dto, Long id) {
         //TODO redo with exception usage throw if movie not exist
         MovieDto result = null;
         if (movieExistById(id)) {
