@@ -4,6 +4,8 @@ import com.example.moviecatalog.enums.Gender;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "actor_entity")
@@ -29,11 +31,25 @@ public class ActorEntity {
     private String birthPlace;
     @Column(nullable = false, length = 2000)
     private String description;
+    @ManyToMany
+    @JoinTable(name = "actor_movie_link",
+            joinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id"))
+    private Set<MovieEntity> movies = new HashSet<>();
 
     public ActorEntity() {
     }
 
-    public ActorEntity(Long id, String name, String surname, String middleName, Gender gender, Instant birthDate, Instant activeStartDate, String birthPlace, String description) {
+    public ActorEntity(Long id,
+                       String name,
+                       String surname,
+                       String middleName,
+                       Gender gender,
+                       Instant birthDate,
+                       Instant activeStartDate,
+                       String birthPlace,
+                       String description,
+                       Set<MovieEntity> movies) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -43,6 +59,7 @@ public class ActorEntity {
         this.activeStartDate = activeStartDate;
         this.birthPlace = birthPlace;
         this.description = description;
+        this.movies = movies;
     }
 
     public void setSurname(String surname) {
@@ -116,4 +133,18 @@ public class ActorEntity {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public void setMovies(Set<MovieEntity> movies) {
+        this.movies = movies;
+    }
+
+    public Set<MovieEntity> getMovies() {
+        return movies;
+    }
+
+    public void addMovie(MovieEntity movie) {
+        this.movies.add(movie);
+        movie.getActors().add(this);
+    }
+
 }

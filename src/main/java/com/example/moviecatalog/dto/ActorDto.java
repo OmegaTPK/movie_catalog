@@ -20,7 +20,15 @@ public class ActorDto implements Serializable {
     public ActorDto() {
     }
 
-    public ActorDto(Long id, String name, String surname, String middleName, Gender gender, Instant birthDate, Instant activeStartDate, String birthPlace, String description) {
+    public ActorDto(Long id,
+                    String name,
+                    String surname,
+                    String middleName,
+                    Gender gender,
+                    Instant birthDate,
+                    Instant activeStartDate,
+                    String birthPlace,
+                    String description) {
         this.id = id;
         this.name = name;
         this.surname = surname;

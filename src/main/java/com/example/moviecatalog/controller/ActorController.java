@@ -21,14 +21,20 @@ public class ActorController {
     }
 
     @PostMapping
-    public ResponseEntity<ActorDto> addMovie(@RequestBody ActorDto dto) {
+    public ResponseEntity<ActorDto> addActor(@RequestBody ActorDto dto) {
         ActorDto result = service.addActor(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     @PutMapping(path = "{id}")
-    public ResponseEntity<ActorDto> updateMovie(@RequestBody ActorDto dto, @PathVariable Long id) {
+    public ResponseEntity<ActorDto> updateActor(@RequestBody ActorDto dto, @PathVariable Long id) {
         ActorDto responseDto = service.updateActor(dto, id);
+        return ResponseEntity.ok().body(responseDto);
+    }
+
+    @PostMapping(path = "{actorId}/movies/{movieId}")
+    public ResponseEntity<ActorDto> addMovie(@PathVariable Long actorId, @PathVariable Long movieId) {
+        ActorDto responseDto = service.addMovie(actorId, movieId);
         return ResponseEntity.ok().body(responseDto);
     }
 }
