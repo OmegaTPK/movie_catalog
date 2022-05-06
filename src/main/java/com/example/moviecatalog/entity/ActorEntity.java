@@ -144,7 +144,6 @@ public class ActorEntity {
 
     public void addMovie(MovieEntity movie) {
         this.movies.add(movie);
-        movie.getActors().add(this);
     }
 
 }
