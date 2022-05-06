@@ -11,6 +11,8 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class MovieService {
@@ -68,6 +70,19 @@ public class MovieService {
         movieEntity = movieDao.save(movieEntity);
 
         result = movieConverter.convert(movieEntity);
+
+        return result;
+    }
+
+    public Set<MovieDto> getMoviesByActor(Long actorId) {
+        Set<MovieDto> result;
+        ActorEntity actor = actorDao.getById(actorId);
+
+        result = actor.
+                getMovies().
+                stream().
+                map(movieConverter::convert).
+                collect(Collectors.toSet());
 
         return result;
     }

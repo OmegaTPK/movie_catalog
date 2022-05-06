@@ -9,6 +9,9 @@ import com.example.moviecatalog.entity.MovieEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Component
 public class ActorService {
 
@@ -54,6 +57,19 @@ public class ActorService {
         actorEntity = actorDao.save(actorEntity);
 
         result = actorConverter.convert(actorEntity);
+
+        return result;
+    }
+
+    public Set<ActorDto> getActorsPlayedInMovie(Long movieId) {
+        Set<ActorDto> result;
+        MovieEntity movie = movieDao.getById(movieId);
+
+        result = movie.
+                getActors().
+                stream().
+                map(actorConverter::convert).
+                collect(Collectors.toSet());
 
         return result;
     }
