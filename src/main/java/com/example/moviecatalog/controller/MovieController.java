@@ -1,7 +1,9 @@
 package com.example.moviecatalog.controller;
 
 
+import com.example.moviecatalog.dto.ActorDto;
 import com.example.moviecatalog.dto.MovieDto;
+import com.example.moviecatalog.service.ActorService;
 import com.example.moviecatalog.service.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
@@ -17,10 +20,12 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 public class MovieController {
 
     private MovieService movieService;
+    private ActorService actorService;
 
     @Autowired
-    public MovieController(MovieService movieService) {
+    public MovieController(MovieService movieService, ActorService actorService) {
         this.movieService = movieService;
+        this.actorService = actorService;
     }
 
     @GetMapping
@@ -43,12 +48,18 @@ public class MovieController {
     @PutMapping(path = "/{id}")
     public ResponseEntity<MovieDto> updateMovie(@RequestBody MovieDto movieDto, @PathVariable Long id) {
         MovieDto responseDto = movieService.updateMovie(movieDto, id);
-        return ResponseEntity.ok().body(responseDto);
+        return ResponseEntity.ok(responseDto);
     }
 
     @PostMapping(path = "/{movieId}/actors/{actorId}")
     public ResponseEntity<MovieDto> addActor(@PathVariable Long movieId, @PathVariable Long actorId) {
         MovieDto responseDto = movieService.addActorToMovie(movieId, actorId);
-        return ResponseEntity.ok().body(responseDto);
+        return ResponseEntity.ok(responseDto);
+    }
+
+    @GetMapping(path = "/{movieId}/actors")
+    public ResponseEntity<Set<ActorDto>> getActorsPlayedInMovie(@PathVariable Long movieId) {
+        Set<ActorDto> actors = actorService.getActorsPlayedInMovie(movieId);
+        return ResponseEntity.ok(actors);
     }
 }
