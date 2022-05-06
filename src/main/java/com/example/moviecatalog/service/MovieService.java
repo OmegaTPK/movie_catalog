@@ -58,7 +58,7 @@ public class MovieService {
         return result;
     }
 
-    public MovieDto addActor(Long movieId, Long actor_id) {
+    public MovieDto addActorToMovie(Long movieId, Long actor_id) {
         //TODO redo exception
         MovieDto result;
         MovieEntity movieEntity = movieDao.getById(movieId);

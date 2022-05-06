@@ -44,7 +44,7 @@ public class ActorService {
         return result;
     }
 
-    public ActorDto addMovie(Long actorId, Long movieId) {
+    public ActorDto addMovieInActorsCareer(Long actorId, Long movieId) {
         //TODO redo exception
         ActorDto result;
         MovieEntity movieEntity = movieDao.getById(movieId);
@@ -61,5 +61,4 @@ public class ActorService {
     private Boolean actorExistById(Long id) {
         return id != null && actorDao.existsById(id);
     }
-
 }

@@ -34,7 +34,7 @@ public class ActorController {
 
     @PostMapping(path = "{actorId}/movies/{movieId}")
     public ResponseEntity<ActorDto> addMovie(@PathVariable Long actorId, @PathVariable Long movieId) {
-        ActorDto responseDto = service.addMovie(actorId, movieId);
+        ActorDto responseDto = service.addMovieInActorsCareer(actorId, movieId);
         return ResponseEntity.ok().body(responseDto);
     }
 }
