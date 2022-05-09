@@ -1,8 +1,9 @@
 package com.example.moviecatalog.entity;
 
 import com.example.moviecatalog.enums.Gender;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -11,34 +12,53 @@ import java.util.Set;
 
 @Entity
 @Table(name = "actor_entity")
-@Data
 @NoArgsConstructor
 public class ActorEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
+    @Getter
+    @Setter
     private Long id;
     @Column(nullable = false, length = 300)
+    @Getter
+    @Setter
     private String name;
     @Column(nullable = false, length = 300)
+    @Getter
+    @Setter
     private String surname;
     @Column(length = 300)
+    @Getter
+    @Setter
     private String middleName;
     @Enumerated
     @Column(nullable = false)
+    @Getter
+    @Setter
     private Gender gender;
     @Column(nullable = false)
+    @Getter
+    @Setter
     private Instant birthDate;
     @Column(nullable = false)
+    @Getter
+    @Setter
     private Instant activeStartDate;
     @Column(nullable = false, length = 500)
+    @Getter
+    @Setter
     private String birthPlace;
     @Column(nullable = false, length = 2000)
+    @Getter
+    @Setter
     private String description;
     @ManyToMany
     @JoinTable(name = "actor_movie_link",
             joinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id"))
+    @Getter
+    @Setter
     private Set<MovieEntity> movies = new HashSet<>();
 
     public ActorEntity(Long id,
