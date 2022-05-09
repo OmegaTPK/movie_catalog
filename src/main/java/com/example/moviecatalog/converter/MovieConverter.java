@@ -22,7 +22,7 @@ public class MovieConverter {
 
     public List<MovieDto> convertEntities(List<MovieEntity> movieDtoList) {
         return movieDtoList.stream()
-                .map(movieEntity -> convert(movieEntity))
+                .map(this::convert)
                 .collect(Collectors.toList());
     }
 
@@ -38,7 +38,7 @@ public class MovieConverter {
 
     public List<MovieEntity> convertDtos(List<MovieDto> movieDtoList) {
         return movieDtoList.stream()
-                .map(movieDto -> convert(movieDto))
+                .map(this::convert)
                 .collect(Collectors.toList());
     }
 
