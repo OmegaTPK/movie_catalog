@@ -1,6 +1,8 @@
 package com.example.moviecatalog.entity;
 
 import com.example.moviecatalog.enums.Gender;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -9,6 +11,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "actor_entity")
+@Data
+@NoArgsConstructor
 public class ActorEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -37,9 +41,6 @@ public class ActorEntity {
             inverseJoinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id"))
     private Set<MovieEntity> movies = new HashSet<>();
 
-    public ActorEntity() {
-    }
-
     public ActorEntity(Long id,
                        String name,
                        String surname,
@@ -60,86 +61,6 @@ public class ActorEntity {
         this.birthPlace = birthPlace;
         this.description = description;
         this.movies = movies;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public void setBirthDate(Instant birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public void setActiveStartDate(Instant activeStartDate) {
-        this.activeStartDate = activeStartDate;
-    }
-
-    public void setBirthPlace(String birthPlace) {
-        this.birthPlace = birthPlace;
-    }
-
-    public String getBirthPlace() {
-        return birthPlace;
-    }
-
-    public Instant getActiveStartDate() {
-        return activeStartDate;
-    }
-
-    public Instant getBirthDate() {
-        return birthDate;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setMovies(Set<MovieEntity> movies) {
-        this.movies = movies;
-    }
-
-    public Set<MovieEntity> getMovies() {
-        return movies;
     }
 
     public void addMovie(MovieEntity movie) {
