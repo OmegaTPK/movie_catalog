@@ -1,6 +1,7 @@
 package com.example.moviecatalog.entity;
 
 import com.example.moviecatalog.enums.Gender;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import java.util.Set;
 @Entity
 @Table(name = "actor_entity")
 @NoArgsConstructor
+@AllArgsConstructor
 public class ActorEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -60,28 +62,6 @@ public class ActorEntity {
     @Getter
     @Setter
     private Set<MovieEntity> movies = new HashSet<>();
-
-    public ActorEntity(Long id,
-                       String name,
-                       String surname,
-                       String middleName,
-                       Gender gender,
-                       Instant birthDate,
-                       Instant activeStartDate,
-                       String birthPlace,
-                       String description,
-                       Set<MovieEntity> movies) {
-        this.id = id;
-        this.name = name;
-        this.surname = surname;
-        this.middleName = middleName;
-        this.gender = gender;
-        this.birthDate = birthDate;
-        this.activeStartDate = activeStartDate;
-        this.birthPlace = birthPlace;
-        this.description = description;
-        this.movies = movies;
-    }
 
     public void addMovie(MovieEntity movie) {
         this.movies.add(movie);

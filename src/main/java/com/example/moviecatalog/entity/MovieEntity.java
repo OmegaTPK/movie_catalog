@@ -1,5 +1,6 @@
 package com.example.moviecatalog.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 public class MovieEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -41,15 +43,6 @@ public class MovieEntity {
     @Getter
     @Setter
     private Set<ActorEntity> actors = new HashSet<>();
-
-    public MovieEntity(Long id, String name, Instant year, String description, Double rate, Set<ActorEntity> actors) {
-        this.id = id;
-        this.name = name;
-        this.year = year;
-        this.description = description;
-        this.rate = rate;
-        this.actors = actors;
-    }
 
     public void addActor(ActorEntity actorEntity) {
         this.actors.add(actorEntity);
