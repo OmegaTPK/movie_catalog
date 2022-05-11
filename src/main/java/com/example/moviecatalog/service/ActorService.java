@@ -7,14 +7,13 @@ import com.example.moviecatalog.dto.ActorDto;
 import com.example.moviecatalog.entity.ActorEntity;
 import com.example.moviecatalog.entity.MovieEntity;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
-@AllArgsConstructor(onConstructor = @__(@Autowired))
+@AllArgsConstructor
 public class ActorService {
 
     private ActorConverter actorConverter;

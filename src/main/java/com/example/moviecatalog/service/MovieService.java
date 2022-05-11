@@ -7,7 +7,6 @@ import com.example.moviecatalog.dto.MovieDto;
 import com.example.moviecatalog.entity.ActorEntity;
 import com.example.moviecatalog.entity.MovieEntity;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
-@AllArgsConstructor(onConstructor = @__(@Autowired))
+@AllArgsConstructor
 public class MovieService {
 
     private MovieDao movieDao;
