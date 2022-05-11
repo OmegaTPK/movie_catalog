@@ -5,7 +5,7 @@ import com.example.moviecatalog.dto.ActorDto;
 import com.example.moviecatalog.dto.MovieDto;
 import com.example.moviecatalog.service.ActorService;
 import com.example.moviecatalog.service.MovieService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,17 +16,12 @@ import java.util.Set;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping(path = {"/api/v1/movies"}, produces = APPLICATION_JSON_VALUE)
 public class MovieController {
 
     private MovieService movieService;
     private ActorService actorService;
-
-    @Autowired
-    public MovieController(MovieService movieService, ActorService actorService) {
-        this.movieService = movieService;
-        this.actorService = actorService;
-    }
 
     @GetMapping
     public ResponseEntity<List<MovieDto>> findAllMovies() {

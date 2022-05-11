@@ -6,25 +6,19 @@ import com.example.moviecatalog.dao.MovieDao;
 import com.example.moviecatalog.dto.ActorDto;
 import com.example.moviecatalog.entity.ActorEntity;
 import com.example.moviecatalog.entity.MovieEntity;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
+@AllArgsConstructor
 public class ActorService {
 
     private ActorConverter actorConverter;
     private ActorDao actorDao;
     private MovieDao movieDao;
-
-    @Autowired
-    public ActorService(ActorConverter converter, ActorDao actorDao, MovieDao movieDao) {
-        this.actorConverter = converter;
-        this.actorDao = actorDao;
-        this.movieDao = movieDao;
-    }
 
     public ActorDto addActor(ActorDto dto) {
         //TODO redo exception

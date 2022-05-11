@@ -1,6 +1,10 @@
 package com.example.moviecatalog.entity;
 
 import com.example.moviecatalog.enums.Gender;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -9,138 +13,55 @@ import java.util.Set;
 
 @Entity
 @Table(name = "actor_entity")
+@NoArgsConstructor
+@AllArgsConstructor
 public class ActorEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
+    @Getter
+    @Setter
     private Long id;
     @Column(nullable = false, length = 300)
+    @Getter
+    @Setter
     private String name;
     @Column(nullable = false, length = 300)
+    @Getter
+    @Setter
     private String surname;
     @Column(length = 300)
+    @Getter
+    @Setter
     private String middleName;
     @Enumerated
     @Column(nullable = false)
+    @Getter
+    @Setter
     private Gender gender;
     @Column(nullable = false)
+    @Getter
+    @Setter
     private Instant birthDate;
     @Column(nullable = false)
+    @Getter
+    @Setter
     private Instant activeStartDate;
     @Column(nullable = false, length = 500)
+    @Getter
+    @Setter
     private String birthPlace;
     @Column(nullable = false, length = 2000)
+    @Getter
+    @Setter
     private String description;
     @ManyToMany
     @JoinTable(name = "actor_movie_link",
             joinColumns = @JoinColumn(name = "actor_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "movie_id", referencedColumnName = "id"))
+    @Getter
+    @Setter
     private Set<MovieEntity> movies = new HashSet<>();
-
-    public ActorEntity() {
-    }
-
-    public ActorEntity(Long id,
-                       String name,
-                       String surname,
-                       String middleName,
-                       Gender gender,
-                       Instant birthDate,
-                       Instant activeStartDate,
-                       String birthPlace,
-                       String description,
-                       Set<MovieEntity> movies) {
-        this.id = id;
-        this.name = name;
-        this.surname = surname;
-        this.middleName = middleName;
-        this.gender = gender;
-        this.birthDate = birthDate;
-        this.activeStartDate = activeStartDate;
-        this.birthPlace = birthPlace;
-        this.description = description;
-        this.movies = movies;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public void setMiddleName(String middleName) {
-        this.middleName = middleName;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
-
-    public void setBirthDate(Instant birthDate) {
-        this.birthDate = birthDate;
-    }
-
-    public void setActiveStartDate(Instant activeStartDate) {
-        this.activeStartDate = activeStartDate;
-    }
-
-    public void setBirthPlace(String birthPlace) {
-        this.birthPlace = birthPlace;
-    }
-
-    public String getBirthPlace() {
-        return birthPlace;
-    }
-
-    public Instant getActiveStartDate() {
-        return activeStartDate;
-    }
-
-    public Instant getBirthDate() {
-        return birthDate;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setMovies(Set<MovieEntity> movies) {
-        this.movies = movies;
-    }
-
-    public Set<MovieEntity> getMovies() {
-        return movies;
-    }
 
     public void addMovie(MovieEntity movie) {
         this.movies.add(movie);

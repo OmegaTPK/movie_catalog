@@ -15,9 +15,9 @@ public class MovieConverter {
         //TODO make DTOs have a linked actors
         return new MovieDto(movieEntity.getId()
                 , movieEntity.getName()
+                , movieEntity.getYear()
                 , movieEntity.getDescription()
-                , movieEntity.getRate()
-                , movieEntity.getYear());
+                , movieEntity.getRate());
     }
 
     public List<MovieDto> convertEntities(List<MovieEntity> movieDtoList) {
