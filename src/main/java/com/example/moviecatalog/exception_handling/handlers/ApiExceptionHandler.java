@@ -40,4 +40,5 @@ public class ApiExceptionHandler {
                 INTERNAL_ERROR);
         return new ResponseEntity<>(body, INTERNAL_ERROR);
     }
+
 }

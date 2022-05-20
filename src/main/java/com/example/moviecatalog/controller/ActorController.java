@@ -44,4 +44,5 @@ public class ActorController {
         Set<MovieDto> result = movieService.getMoviesByActor(actorId);
         return ResponseEntity.ok(result);
     }
+
 }

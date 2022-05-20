@@ -35,7 +35,7 @@ public class MovieController {
     }
 
     @DeleteMapping
-    public ResponseEntity deleteMovie(@RequestParam Long id) {
+    public ResponseEntity<Object> deleteMovie(@RequestParam Long id) {
         movieService.deleteMovie(id);
         return ResponseEntity.ok().build();
     }
@@ -57,4 +57,5 @@ public class MovieController {
         Set<ActorDto> actors = actorService.getActorsPlayedInMovie(movieId);
         return ResponseEntity.ok(actors);
     }
+
 }
