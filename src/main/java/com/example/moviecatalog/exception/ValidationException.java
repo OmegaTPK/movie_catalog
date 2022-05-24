@@ -1,4 +1,4 @@
-package com.example.moviecatalog.exception_handling.exceptions;
+package com.example.moviecatalog.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

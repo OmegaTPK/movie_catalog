@@ -35,7 +35,7 @@ public class MovieController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Object> deleteMovie(@RequestParam Long id) {
+    public ResponseEntity deleteMovie(@RequestParam Long id) {
         movieService.deleteMovie(id);
         return ResponseEntity.ok().build();
     }
