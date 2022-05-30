@@ -57,4 +57,5 @@ public class MovieController {
         Set<ActorDto> actors = actorService.getActorsPlayedInMovie(movieId);
         return ResponseEntity.ok(actors);
     }
+
 }

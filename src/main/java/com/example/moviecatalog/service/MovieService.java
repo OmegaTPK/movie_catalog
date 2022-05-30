@@ -6,6 +6,8 @@ import com.example.moviecatalog.dao.MovieDao;
 import com.example.moviecatalog.dto.MovieDto;
 import com.example.moviecatalog.entity.ActorEntity;
 import com.example.moviecatalog.entity.MovieEntity;
+import com.example.moviecatalog.exception.NotFoundException;
+import com.example.moviecatalog.exception.ValidationException;
 import lombok.AllArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -37,16 +39,17 @@ public class MovieService {
     }
 
     public void deleteMovie(@NonNull Long id) {
-        //TODO redo with exception usage throw if can't delete
-        if (movieExistById(id)) {
-            movieDao.deleteById(id);
-        }
+        checkExistingOfMovie(id);
+        movieDao.deleteById(id);
     }
 
     public MovieDto updateMovie(MovieDto dto, Long id) {
-        //TODO redo with exception usage throw if movie not exist
         MovieDto result;
-        MovieEntity entity = movieDao.getById(id);
+        MovieEntity entity;
+
+        checkExistingOfMovie(id);
+
+        entity = movieDao.getById(id);
 
         movieConverter.fillEntityFromDto(dto, entity);
         result = movieConverter.convert(movieDao.save(entity));
@@ -54,11 +57,15 @@ public class MovieService {
         return result;
     }
 
-    public MovieDto addActorToMovie(Long movieId, Long actor_id) {
-        //TODO redo exception
+    public MovieDto addActorToMovie(Long movieId, Long actorId) {
         MovieDto result;
-        MovieEntity movieEntity = movieDao.getById(movieId);
-        ActorEntity actorEntity = actorDao.getById(actor_id);
+        MovieEntity movieEntity;
+        ActorEntity actorEntity;
+
+        checkExistingActorMovieLink(actorId, movieId);
+
+        movieEntity = movieDao.getById(movieId);
+        actorEntity = actorDao.getById(actorId);
 
         movieEntity.addActor(actorEntity);
         movieEntity = movieDao.save(movieEntity);
@@ -70,8 +77,11 @@ public class MovieService {
 
     public Set<MovieDto> getMoviesByActor(Long actorId) {
         Set<MovieDto> result;
-        ActorEntity actor = actorDao.getById(actorId);
+        ActorEntity actor;
 
+        checkExistingOfActor(actorId);
+
+        actor = actorDao.getById(actorId);
         result = actor.
                 getMovies().
                 stream().
@@ -81,7 +91,31 @@ public class MovieService {
         return result;
     }
 
-    private Boolean movieExistById(Long movieId) {
-        return movieId != null && movieDao.existsById(movieId);
+    private void checkExistingOfActor(Long actorId) {
+        if (!actorDao.existsById(actorId)) {
+            throw new NotFoundException("Actor not found!");
+        }
     }
+
+    private void checkExistingOfMovie(Long movieId) {
+        if (!movieDao.existsById(movieId)) {
+            throw new NotFoundException("Movie not found!");
+        }
+    }
+
+    private void checkExistingActorMovieLink(Long actorId, Long movieId) {
+        ActorEntity actorEntity;
+        MovieEntity movieEntity;
+
+        checkExistingOfActor(actorId);
+        checkExistingOfMovie(movieId);
+
+        actorEntity = actorDao.getById(actorId);
+        movieEntity = movieDao.getById(movieId);
+
+        if (actorEntity.getMovies().contains(movieEntity)) {
+            throw new ValidationException("Actor's already play in this movie");
+        }
+    }
+
 }
