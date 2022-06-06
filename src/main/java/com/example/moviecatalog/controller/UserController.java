@@ -1,6 +1,6 @@
 package com.example.moviecatalog.controller;
 
-import com.example.moviecatalog.dto.LoginPassDto;
+import com.example.moviecatalog.dto.CredentialsDto;
 import com.example.moviecatalog.dto.RoleDto;
 import com.example.moviecatalog.dto.UserDto;
 import com.example.moviecatalog.service.UserService;
@@ -19,7 +19,7 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @RequestMapping(path = {"/api/v1/users"}, produces = APPLICATION_JSON_VALUE)
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<List<UserDto>> getUsers() {
@@ -51,9 +51,9 @@ public class UserController {
         return ResponseEntity.ok(userService.setUsersRoles(id, roles));
     }
 
-    @PutMapping(path = "/{id}/auth")
-    public ResponseEntity setLoginPass(@PathVariable Long id, @RequestBody LoginPassDto auth) {
-        userService.setLoginPass(id, auth);
+    @PutMapping(path = "/{id}/credentials")
+    public ResponseEntity setLoginPass(@PathVariable Long id, @RequestBody CredentialsDto credentials) {
+        userService.setCredentials(id, credentials);
         return ResponseEntity.ok().build();
     }
 }

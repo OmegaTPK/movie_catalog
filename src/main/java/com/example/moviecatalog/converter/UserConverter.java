@@ -34,4 +34,3 @@ public class UserConverter {
         entity.setActive(dto.getActive());
     }
 }
-

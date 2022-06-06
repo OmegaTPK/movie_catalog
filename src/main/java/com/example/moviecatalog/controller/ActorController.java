@@ -18,8 +18,8 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @AllArgsConstructor
 public class ActorController {
 
-    private ActorService actorService;
-    private MovieService movieService;
+    private final ActorService actorService;
+    private final MovieService movieService;
 
     @PostMapping
     public ResponseEntity<ActorDto> addActor(@RequestBody ActorDto dto) {
@@ -44,5 +44,4 @@ public class ActorController {
         Set<MovieDto> result = movieService.getMoviesByActor(actorId);
         return ResponseEntity.ok(result);
     }
-
 }

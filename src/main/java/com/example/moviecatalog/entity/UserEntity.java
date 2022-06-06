@@ -38,9 +38,10 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<RoleEntity> roles = new HashSet<>();
 
-    @OneToOne
-    @JoinColumn(name = "auth", unique = true)
-    private AuthenticationInfoEntity authInfo;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "credentials_id", referencedColumnName = "id")
+
+    private CredentialsEntity credentials;
 
     public void addRole(RoleEntity role) {
         roles.add(role);

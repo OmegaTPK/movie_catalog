@@ -1,48 +1,37 @@
 package com.example.moviecatalog.service;
 
-import com.example.moviecatalog.converter.AuthConverter;
 import com.example.moviecatalog.converter.RoleConverter;
 import com.example.moviecatalog.converter.UserConverter;
-import com.example.moviecatalog.dao.AuthenticationInfoDao;
+import com.example.moviecatalog.dao.CredentialsDao;
 import com.example.moviecatalog.dao.RoleDao;
 import com.example.moviecatalog.dao.UserDao;
-import com.example.moviecatalog.dto.LoginPassDto;
+import com.example.moviecatalog.dto.CredentialsDto;
 import com.example.moviecatalog.dto.RoleDto;
 import com.example.moviecatalog.dto.UserDto;
-import com.example.moviecatalog.entity.AuthenticationInfoEntity;
+import com.example.moviecatalog.entity.CredentialsEntity;
 import com.example.moviecatalog.entity.RoleEntity;
 import com.example.moviecatalog.entity.UserEntity;
+import com.example.moviecatalog.exception.CredentialsConflictException;
 import com.example.moviecatalog.exception.NotFoundException;
-import com.example.moviecatalog.exception.ValidationException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import com.example.moviecatalog.exception.UserValidationException;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Component
+@Service
+@AllArgsConstructor
 public class UserService {
 
-    private final AuthenticationInfoDao authDao;
+    private final CredentialsDao authDao;
     private final UserDao userDao;
     private final RoleDao roleDao;
-    private final AuthConverter authConverter;
+    private final CredentialsService credentialsService;
     private final UserConverter userConverter;
     private final RoleConverter roleConverter;
-
-    private final RoleEntity DEFAULT_ROLE;
-
-    @Autowired
-    public UserService(UserDao userDao, RoleDao roleDao, UserConverter userConverter, RoleConverter roleConverter, AuthConverter authConverter, AuthenticationInfoDao authDao) {
-        this.userDao = userDao;
-        this.roleDao = roleDao;
-        this.userConverter = userConverter;
-        this.roleConverter = roleConverter;
-        this.authDao = authDao;
-        this.authConverter = authConverter;
-        this.DEFAULT_ROLE = roleDao.getById(0L);
-    }
+    private final Long DEFAULT_ROLE_ID = 0L;
 
     public UserDto addUser(UserDto userDto) {
         UserDto result;
@@ -50,7 +39,7 @@ public class UserService {
 
         userDto.setId(null);
         entity = userConverter.convert(userDto);
-        entity.addRole(DEFAULT_ROLE);
+        entity.addRole(roleDao.getById(DEFAULT_ROLE_ID));
 
         result = userConverter.convert(userDao.save(entity));
         return result;
@@ -101,7 +90,7 @@ public class UserService {
                 .map(roleDto -> roleDao.getById(roleDto.getId()))
                 .collect(Collectors.toSet());
         user.setRoles(rolesEntities);
-        checkUsersRoles(user);
+        validateUsersRoles(user);
 
         result = userDao.save(user)
                 .getRoles()
@@ -129,23 +118,16 @@ public class UserService {
         return result;
     }
 
-    public void setLoginPass(Long userId, LoginPassDto loginPassDto) {
+    public void setCredentials(Long userId, CredentialsDto credentialsDto) {
         UserEntity user;
-        AuthenticationInfoEntity auth;
+        CredentialsEntity credentialsEntity;
 
         checkUserExist(userId);
         user = userDao.getById(userId);
+        validateCredentials(user, credentialsDto);
 
-        checkLoginPass(user, loginPassDto);
-
-        auth = authDao.findByUser(user) == null
-                ? authConverter.convert(loginPassDto)
-                : authDao.findByUser(user);
-        authConverter.fillFromDto(loginPassDto, auth);
-
-        auth.setUser(user);
-        user.setAuthInfo(auth);
-        authDao.save(auth);
+        credentialsEntity = credentialsService.getCredentials(user, credentialsDto);
+        user.setCredentials(credentialsEntity);
         userDao.save(user);
     }
 
@@ -155,17 +137,16 @@ public class UserService {
         }
     }
 
-    private void checkUsersRoles(UserEntity entity) {
+    private void validateUsersRoles(UserEntity entity) {
         if (entity.getRoles().isEmpty()) {
-            throw new ValidationException("User must have at list one role!");
+            throw new UserValidationException("User must have at list one role!");
         }
     }
 
-    private void checkLoginPass(UserEntity user, LoginPassDto dto) {
-        AuthenticationInfoEntity entity = authDao.findByLogin(dto.login());
-        if (entity != null && entity.getUser() != user) {
-            throw new ValidationException("User with this user name is already exist");
+    private void validateCredentials(UserEntity user, CredentialsDto dto) {
+        CredentialsEntity entity = authDao.findByLogin(dto.login());
+        if (entity != null && user.getCredentials() != entity) {
+            throw new CredentialsConflictException("User with this user name is already exist");
         }
     }
 }
-
