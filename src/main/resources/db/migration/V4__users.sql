@@ -36,3 +36,7 @@ ALTER TABLE usr ADD CONSTRAINT FK_USR_ON_CREDENTIALS FOREIGN KEY (credentials_id
 ALTER TABLE usr_roles ADD CONSTRAINT fk_usr_roles_on_role_entity FOREIGN KEY (role_id) REFERENCES role_entity (id);
 
 ALTER TABLE usr_roles ADD CONSTRAINT fk_usr_roles_on_user_entity FOREIGN KEY (usr_id) REFERENCES usr (id);
+
+INSERT INTO public.role_entity(
+	id, name)
+	VALUES (0,'DEFAULT'), (1,'MANAGER'), (2,'ADMIN');
