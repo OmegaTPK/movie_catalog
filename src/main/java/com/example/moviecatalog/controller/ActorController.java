@@ -18,8 +18,8 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @AllArgsConstructor
 public class ActorController {
 
-    private ActorService actorService;
-    private MovieService movieService;
+    private final ActorService actorService;
+    private final MovieService movieService;
 
     @PostMapping
     public ResponseEntity<ActorDto> addActor(@RequestBody ActorDto dto) {
@@ -36,7 +36,7 @@ public class ActorController {
     @PostMapping(path = "{actorId}/movies/{movieId}")
     public ResponseEntity<ActorDto> addMovie(@PathVariable Long actorId, @PathVariable Long movieId) {
         ActorDto responseDto = actorService.addMovieInActorsCareer(actorId, movieId);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     @GetMapping(path = "{actorId}/movies")
@@ -44,5 +44,4 @@ public class ActorController {
         Set<MovieDto> result = movieService.getMoviesByActor(actorId);
         return ResponseEntity.ok(result);
     }
-
 }

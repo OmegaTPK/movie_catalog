@@ -16,12 +16,12 @@ import java.util.Set;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 
 @RestController
-@AllArgsConstructor
 @RequestMapping(path = {"/api/v1/movies"}, produces = APPLICATION_JSON_VALUE)
+@AllArgsConstructor
 public class MovieController {
 
-    private MovieService movieService;
-    private ActorService actorService;
+    private final MovieService movieService;
+    private final ActorService actorService;
 
     @GetMapping
     public ResponseEntity<List<MovieDto>> findAllMovies() {
@@ -49,7 +49,7 @@ public class MovieController {
     @PostMapping(path = "/{movieId}/actors/{actorId}")
     public ResponseEntity<MovieDto> addActor(@PathVariable Long movieId, @PathVariable Long actorId) {
         MovieDto responseDto = movieService.addActorToMovie(movieId, actorId);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     @GetMapping(path = "/{movieId}/actors")
@@ -57,5 +57,4 @@ public class MovieController {
         Set<ActorDto> actors = actorService.getActorsPlayedInMovie(movieId);
         return ResponseEntity.ok(actors);
     }
-
 }

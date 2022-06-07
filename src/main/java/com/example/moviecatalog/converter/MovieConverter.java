@@ -49,6 +49,3 @@ public class MovieConverter {
         entity.setYear(dto.getYear());
     }
 }
-
-
-

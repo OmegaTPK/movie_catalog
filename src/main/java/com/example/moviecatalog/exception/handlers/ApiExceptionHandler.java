@@ -1,5 +1,6 @@
 package com.example.moviecatalog.exception.handlers;
 
+import com.example.moviecatalog.exception.ConflictException;
 import com.example.moviecatalog.exception.NotFoundException;
 import com.example.moviecatalog.exception.ValidationException;
 import com.example.moviecatalog.exception.models.ApiExceptionModel;
@@ -20,6 +21,13 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value = {ConflictException.class})
+    public ResponseEntity<ApiExceptionModel> conflictExceptionHandler(ConflictException e) {
+        ApiExceptionModel body = new ApiExceptionModel(e.getMessage(),
+                Instant.now());
+        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(value = {NotFoundException.class})
     public ResponseEntity<ApiExceptionModel> notFoundExceptionHandler(NotFoundException e) {
         ApiExceptionModel body = new ApiExceptionModel(e.getMessage(),
@@ -28,7 +36,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(value = {Exception.class})
-    public ResponseEntity<ApiExceptionModel> notFoundExceptionHandler(Exception e) {
+    public ResponseEntity<ApiExceptionModel> generalExceptionHandler(Exception e) {
         ApiExceptionModel body = new ApiExceptionModel(e.getMessage(),
                 Instant.now());
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);

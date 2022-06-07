@@ -9,12 +9,12 @@ import com.example.moviecatalog.entity.MovieEntity;
 import com.example.moviecatalog.exception.NotFoundException;
 import com.example.moviecatalog.exception.ValidationException;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Component
+@Service
 @AllArgsConstructor
 public class ActorService {
 
