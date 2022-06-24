@@ -12,9 +12,11 @@ import com.example.moviecatalog.entity.CredentialsEntity;
 import com.example.moviecatalog.entity.RoleEntity;
 import com.example.moviecatalog.entity.UserEntity;
 import com.example.moviecatalog.exception.CredentialsConflictException;
+import com.example.moviecatalog.exception.CredentialsValidationException;
 import com.example.moviecatalog.exception.NotFoundException;
 import com.example.moviecatalog.exception.UserValidationException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,12 +27,13 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class UserService {
 
-    private final CredentialsDao authDao;
+    private final CredentialsDao credentialsDao;
     private final UserDao userDao;
     private final RoleDao roleDao;
     private final CredentialsService credentialsService;
     private final UserConverter userConverter;
     private final RoleConverter roleConverter;
+    private final PasswordEncoder passwordEncoder;
     private final Long DEFAULT_ROLE_ID = 0L;
 
     public UserDto addUser(UserDto userDto) {
@@ -39,7 +42,7 @@ public class UserService {
 
         userDto.setId(null);
         entity = userConverter.convert(userDto);
-        entity.addRole(roleDao.getById(DEFAULT_ROLE_ID));
+        entity.addRole(roleDao.getReferenceById(DEFAULT_ROLE_ID));
 
         result = userConverter.convert(userDao.save(entity));
         return result;
@@ -50,7 +53,7 @@ public class UserService {
         UserEntity userEntity;
 
         checkUserExist(userId);
-        userEntity = userDao.getById(userId);
+        userEntity = userDao.getReferenceById(userId);
 
         userConverter.fillEntityFromDto(userEntity, userDto);
 
@@ -70,7 +73,7 @@ public class UserService {
         UserEntity user;
 
         checkUserExist(userId);
-        user = userDao.getById(userId);
+        user = userDao.getReferenceById(userId);
         result = user.getRoles()
                 .stream()
                 .map(roleConverter::convert)
@@ -84,10 +87,10 @@ public class UserService {
         UserEntity user;
 
         checkUserExist(userId);
-        user = userDao.getById(userId);
+        user = userDao.getReferenceById(userId);
         rolesEntities = roles
                 .stream()
-                .map(roleDto -> roleDao.getById(roleDto.getId()))
+                .map(roleDto -> roleDao.getReferenceById(roleDto.getId()))
                 .collect(Collectors.toSet());
         user.setRoles(rolesEntities);
         validateUsersRoles(user);
@@ -106,8 +109,8 @@ public class UserService {
         UserEntity user;
 
         checkUserExist(userId);
-        user = userDao.getById(userId);
-        user.addRole(roleDao.getById(role.getId()));
+        user = userDao.getReferenceById(userId);
+        user.addRole(roleDao.getReferenceById(role.getId()));
 
         result = userDao.save(user)
                 .getRoles()
@@ -123,12 +126,41 @@ public class UserService {
         CredentialsEntity credentialsEntity;
 
         checkUserExist(userId);
-        user = userDao.getById(userId);
+        user = userDao.getReferenceById(userId);
         validateCredentials(user, credentialsDto);
 
         credentialsEntity = credentialsService.getCredentials(user, credentialsDto);
         user.setCredentials(credentialsEntity);
         userDao.save(user);
+    }
+
+    public UserEntity findByCredentials(CredentialsDto credentialsDto) {
+        CredentialsEntity credentials;
+        UserEntity user;
+
+        credentials = credentialsDao.findByLogin(credentialsDto.getLogin());
+        if (credentials == null) {
+            throw new CredentialsValidationException("Authentication failed");
+        }
+
+        user = userDao.findByCredentials(credentials);
+        if (user == null
+                || passwordEncoder.matches(credentialsDto.getPassword(), credentials.getPassword())) {
+            throw new CredentialsValidationException("Authentication failed");
+        }
+
+        return user;
+    }
+
+    public UserEntity findUserByUsername(String userName) {
+
+        UserEntity result;
+        CredentialsEntity credentials;
+
+        credentials = credentialsDao.findByLogin(userName);
+        result = userDao.findByCredentials(credentials);
+
+        return result;
     }
 
     private void checkUserExist(Long id) {
@@ -144,7 +176,7 @@ public class UserService {
     }
 
     private void validateCredentials(UserEntity user, CredentialsDto dto) {
-        CredentialsEntity entity = authDao.findByLogin(dto.login());
+        CredentialsEntity entity = credentialsDao.findByLogin(dto.getLogin());
         if (entity != null && user.getCredentials() != entity) {
             throw new CredentialsConflictException("User with this user name is already exist");
         }

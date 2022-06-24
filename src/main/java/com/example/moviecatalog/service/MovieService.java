@@ -49,7 +49,7 @@ public class MovieService {
 
         checkExistingOfMovie(id);
 
-        entity = movieDao.getById(id);
+        entity = movieDao.getReferenceById(id);
 
         movieConverter.fillEntityFromDto(dto, entity);
         result = movieConverter.convert(movieDao.save(entity));
@@ -64,8 +64,8 @@ public class MovieService {
 
         checkExistingActorMovieLink(actorId, movieId);
 
-        movieEntity = movieDao.getById(movieId);
-        actorEntity = actorDao.getById(actorId);
+        movieEntity = movieDao.getReferenceById(movieId);
+        actorEntity = actorDao.getReferenceById(actorId);
 
         movieEntity.addActor(actorEntity);
         movieEntity = movieDao.save(movieEntity);
@@ -81,7 +81,7 @@ public class MovieService {
 
         checkExistingOfActor(actorId);
 
-        actor = actorDao.getById(actorId);
+        actor = actorDao.getReferenceById(actorId);
         result = actor.
                 getMovies().
                 stream().
@@ -110,12 +110,11 @@ public class MovieService {
         checkExistingOfActor(actorId);
         checkExistingOfMovie(movieId);
 
-        actorEntity = actorDao.getById(actorId);
-        movieEntity = movieDao.getById(movieId);
+        actorEntity = actorDao.getReferenceById(actorId);
+        movieEntity = movieDao.getReferenceById(movieId);
 
         if (actorEntity.getMovies().contains(movieEntity)) {
             throw new ValidationException("Actor's already play in this movie");
         }
     }
-
 }
