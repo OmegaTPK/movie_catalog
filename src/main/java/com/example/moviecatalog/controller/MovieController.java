@@ -8,6 +8,7 @@ import com.example.moviecatalog.service.MovieService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,24 +29,28 @@ public class MovieController {
         return ResponseEntity.ok(movieService.getMovies());
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     @PostMapping
     public ResponseEntity<MovieDto> addMovie(@RequestBody MovieDto movieDto) {
         MovieDto result = movieService.addMovie(movieDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping
     public ResponseEntity deleteMovie(@RequestParam Long id) {
         movieService.deleteMovie(id);
         return ResponseEntity.ok().build();
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     @PutMapping(path = "/{id}")
     public ResponseEntity<MovieDto> updateMovie(@RequestBody MovieDto movieDto, @PathVariable Long id) {
         MovieDto responseDto = movieService.updateMovie(movieDto, id);
         return ResponseEntity.ok(responseDto);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     @PostMapping(path = "/{movieId}/actors/{actorId}")
     public ResponseEntity<MovieDto> addActor(@PathVariable Long movieId, @PathVariable Long actorId) {
         MovieDto responseDto = movieService.addActorToMovie(movieId, actorId);

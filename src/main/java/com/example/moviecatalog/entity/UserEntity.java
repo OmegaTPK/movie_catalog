@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -32,11 +31,11 @@ public class UserEntity {
     @Column(nullable = false)
     private Boolean active = false;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "usr_roles",
             joinColumns = @JoinColumn(name = "usr_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
-    private Set<RoleEntity> roles = new HashSet<>();
+    private Set<RoleEntity> roles = new java.util.LinkedHashSet<>();
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "credentials_id", referencedColumnName = "id")

@@ -37,7 +37,7 @@ public class ActorService {
 
         checkExistingOfActor(id);
 
-        entityActor = actorDao.getById(id);
+        entityActor = actorDao.getReferenceById(id);
         actorConverter.fillEntityFromDto(dto, entityActor);
 
         result = actorConverter.convert(actorDao.save(entityActor));
@@ -51,8 +51,8 @@ public class ActorService {
 
         checkExistingActorMovieLink(actorId, movieId);
 
-        movieEntity = movieDao.getById(movieId);
-        actorEntity = actorDao.getById(actorId);
+        movieEntity = movieDao.getReferenceById(movieId);
+        actorEntity = actorDao.getReferenceById(actorId);
 
         actorEntity.addMovie(movieEntity);
         actorEntity = actorDao.save(actorEntity);
@@ -63,7 +63,7 @@ public class ActorService {
 
     public Set<ActorDto> getActorsPlayedInMovie(Long movieId) {
         Set<ActorDto> result;
-        MovieEntity movie = movieDao.getById(movieId);
+        MovieEntity movie = movieDao.getReferenceById(movieId);
 
         checkExistingOfMovie(movieId);
 
@@ -75,6 +75,15 @@ public class ActorService {
 
         return result;
     }
+
+    public Set<ActorDto> getActors() {
+        return actorDao
+                .findAll()
+                .stream()
+                .map(actorConverter::convert)
+                .collect(Collectors.toSet());
+    }
+
 
     private void checkExistingOfActor(Long actorId) {
         if (!actorDao.existsById(actorId)) {
@@ -95,12 +104,11 @@ public class ActorService {
         checkExistingOfActor(actorId);
         checkExistingOfMovie(movieId);
 
-        actorEntity = actorDao.getById(actorId);
-        movieEntity = movieDao.getById(movieId);
+        actorEntity = actorDao.getReferenceById(actorId);
+        movieEntity = movieDao.getReferenceById(movieId);
 
         if (actorEntity.getMovies().contains(movieEntity)) {
             throw new ValidationException("Actor's already play in this movie");
         }
     }
-
 }

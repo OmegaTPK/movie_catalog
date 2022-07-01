@@ -1,4 +1,11 @@
 package com.example.moviecatalog.dto;
 
-public record CredentialsDto(String login, String password) {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+public class CredentialsDto {
+    private String login;
+    private String password;
 }
