@@ -5,19 +5,22 @@ import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 @Component
 @Log
 public class JwtProvider {
 
-    @Value("$(jwt.secret)")
     private String jwtSecret;
 
+    public JwtProvider(@Value("${jwt.secret}") String jwtSecret) {
+        this.jwtSecret = jwtSecret;
+    }
+
     public String generateToken(String login) {
-        Date date = Date.from(LocalDate.now().plusDays(15).atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date date = Date.from(Instant.now().plus(15, ChronoUnit.DAYS));
         return Jwts.builder()
                 .setSubject(login)
                 .setExpiration(date)

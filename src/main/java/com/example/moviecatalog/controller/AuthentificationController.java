@@ -18,7 +18,7 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 @AllArgsConstructor
 public class AuthentificationController {
 
-    private CredentialsService credentialsService;
+    private final CredentialsService credentialsService;
 
     @PostMapping
     public ResponseEntity<TokenDto> getToken(@RequestBody CredentialsDto credentials) {
