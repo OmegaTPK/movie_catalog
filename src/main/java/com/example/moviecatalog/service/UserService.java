@@ -12,11 +12,9 @@ import com.example.moviecatalog.entity.CredentialsEntity;
 import com.example.moviecatalog.entity.RoleEntity;
 import com.example.moviecatalog.entity.UserEntity;
 import com.example.moviecatalog.exception.CredentialsConflictException;
-import com.example.moviecatalog.exception.CredentialsValidationException;
 import com.example.moviecatalog.exception.NotFoundException;
 import com.example.moviecatalog.exception.UserValidationException;
 import lombok.AllArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +31,6 @@ public class UserService {
     private final CredentialsService credentialsService;
     private final UserConverter userConverter;
     private final RoleConverter roleConverter;
-    private final PasswordEncoder passwordEncoder;
     private final Long DEFAULT_ROLE_ID = 0L;
 
     public UserDto addUser(UserDto userDto) {
@@ -41,10 +38,10 @@ public class UserService {
         UserEntity entity;
 
         userDto.setId(null);
-        entity = userConverter.convert(userDto);
+        entity = userConverter.convertDtoToEntity(userDto);
         entity.addRole(roleDao.getReferenceById(DEFAULT_ROLE_ID));
 
-        result = userConverter.convert(userDao.save(entity));
+        result = userConverter.convertEntityToDto(userDao.save(entity));
         return result;
     }
 
@@ -57,14 +54,14 @@ public class UserService {
 
         userConverter.fillEntityFromDto(userEntity, userDto);
 
-        result = userConverter.convert(userDao.save(userEntity));
+        result = userConverter.convertEntityToDto(userDao.save(userEntity));
         return result;
     }
 
     public List<UserDto> getUsers() {
         return userDao.findAll()
                 .stream()
-                .map(userConverter::convert)
+                .map(userConverter::convertEntityToDto)
                 .collect(Collectors.toList());
     }
 
@@ -87,9 +84,11 @@ public class UserService {
         UserEntity user;
 
         checkUserExist(userId);
+        roles.forEach(roleDto -> checkRolesExist(roleDto.getId()));
+
         user = userDao.getReferenceById(userId);
-        rolesEntities = roles
-                .stream()
+
+        rolesEntities = roles.stream()
                 .map(roleDto -> roleDao.getReferenceById(roleDto.getId()))
                 .collect(Collectors.toSet());
         user.setRoles(rolesEntities);
@@ -109,6 +108,8 @@ public class UserService {
         UserEntity user;
 
         checkUserExist(userId);
+        checkRolesExist(role.getId());
+
         user = userDao.getReferenceById(userId);
         user.addRole(roleDao.getReferenceById(role.getId()));
 
@@ -134,38 +135,15 @@ public class UserService {
         userDao.save(user);
     }
 
-    public UserEntity findByCredentials(CredentialsDto credentialsDto) {
-        CredentialsEntity credentials;
-        UserEntity user;
-
-        credentials = credentialsDao.findByLogin(credentialsDto.getLogin());
-        if (credentials == null) {
-            throw new CredentialsValidationException("Authentication failed");
-        }
-
-        user = userDao.findByCredentials(credentials);
-        if (user == null
-                || passwordEncoder.matches(credentialsDto.getPassword(), credentials.getPassword())) {
-            throw new CredentialsValidationException("Authentication failed");
-        }
-
-        return user;
-    }
-
-    public UserEntity findUserByUsername(String userName) {
-
-        UserEntity result;
-        CredentialsEntity credentials;
-
-        credentials = credentialsDao.findByLogin(userName);
-        result = userDao.findByCredentials(credentials);
-
-        return result;
-    }
-
     private void checkUserExist(Long id) {
         if (!userDao.existsById(id)) {
             throw new NotFoundException("User not found!");
+        }
+    }
+
+    private void checkRolesExist(Long id) {
+        if (!roleDao.existsById(id)) {
+            throw new NotFoundException("Role not found!");
         }
     }
 

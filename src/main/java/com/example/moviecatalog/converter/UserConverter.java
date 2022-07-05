@@ -9,7 +9,7 @@ import java.util.HashSet;
 @Component
 public class UserConverter {
 
-    public UserDto convert(UserEntity userEntity) {
+    public UserDto convertEntityToDto(UserEntity userEntity) {
         return new UserDto(userEntity.getId(),
                 userEntity.getName(),
                 userEntity.getLastname(),
@@ -17,7 +17,7 @@ public class UserConverter {
                 userEntity.getActive());
     }
 
-    public UserEntity convert(UserDto userDto) {
+    public UserEntity convertDtoToEntity(UserDto userDto) {
         return new UserEntity(userDto.getId(),
                 userDto.getName(),
                 userDto.getLastname(),

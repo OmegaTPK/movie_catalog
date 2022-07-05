@@ -1,9 +1,6 @@
 package com.example.moviecatalog.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -14,6 +11,8 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
+@EqualsAndHashCode
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -3,12 +3,14 @@ package com.example.moviecatalog.dto;
 import com.example.moviecatalog.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.time.Instant;
 
 @Data
 @AllArgsConstructor
+@EqualsAndHashCode
 public class ActorDto implements Serializable {
     private Long id;
     private String name;

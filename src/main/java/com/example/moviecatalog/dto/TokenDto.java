@@ -1,4 +1,12 @@
 package com.example.moviecatalog.dto;
 
-public record TokenDto(String token) {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
+@AllArgsConstructor
+@Data
+public final class TokenDto {
+    private String token;
 }

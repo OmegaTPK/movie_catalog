@@ -1,9 +1,6 @@
 package com.example.moviecatalog.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -15,6 +12,8 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
+@EqualsAndHashCode
 public class RoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,5 +27,4 @@ public class RoleEntity {
             joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "usr_id", referencedColumnName = "id"))
     private Set<UserEntity> users = new HashSet<>();
-
 }
