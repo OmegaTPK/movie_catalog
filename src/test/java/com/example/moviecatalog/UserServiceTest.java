@@ -137,9 +137,10 @@ public class UserServiceTest {
         assertNull(incomingDto.getId());
         assertEquals(updatedDto, outcomingUserDto);
         assertFalse(savedNewUserEntity.getRoles().isEmpty());
-        verify(userConverter).convertDtoToEntity(any());
-        verify(userConverter).convertEntityToDto(any());
+        verify(userConverter).convertDtoToEntity(incomingDto);
+        verify(userConverter).convertEntityToDto(savedNewUserEntity);
         verify(roleDao).getReferenceById(DEFAULT_ROLE_ID);
+        verify(userDao.save(userWithDefaultRole));
     }
 
     @Test
@@ -192,7 +193,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void getAllUsers_getListOfUsersDTOs() {
+    public void getAllUsers_getListOfUsersDTOs_setUserDto() {
         UserEntity existingUserEntity1 = UserEntity.builder()
                 .Id(11L)
                 .roles(new HashSet<>())
@@ -236,7 +237,7 @@ public class UserServiceTest {
         assertNotNull(resultRoles);
         assertFalse(resultRoles.isEmpty());
         assertArrayEquals(expectedSet.toArray(), resultRoles.toArray());
-        verify(roleConverter, times(2)).convert(any());
+        verify(roleConverter, times(2)).convert(DEFAULT_ROLE);
         verify(userDao).existsById(EXISTING_USER_ID);
         verify(userDao).getReferenceById(EXISTING_USER_ID);
     }
@@ -281,9 +282,11 @@ public class UserServiceTest {
         assertArrayEquals(existingUserEntity.getRoles().toArray(), expectedRolesEntitySet.toArray());
         verify(userDao).existsById(EXISTING_USER_ID);
         verify(userDao).getReferenceById(EXISTING_USER_ID);
-        verify(roleDao, times(2)).getReferenceById(any());
-        verify(roleDao, times(2)).existsById(any());
-        verify(userDao).save(existingUserEntity);
+        verify(roleDao).getReferenceById(ADMIN_ROLE_ID);
+        verify(roleDao).getReferenceById(DEFAULT_ROLE_ID);
+        verify(roleDao).existsById(ADMIN_ROLE_ID);
+        verify(roleDao).existsById(DEFAULT_ROLE_ID);
+        verify(userDao).save(eq(existingUserEntity));
     }
 
     @Test
@@ -319,9 +322,9 @@ public class UserServiceTest {
 
         assertEquals(ROLES_VALIDATIONS_FALSE_MESSAGE, exception.getMessage());
         verify(userDao).existsById(EXISTING_USER_ID);
+        verify(userDao).getReferenceById(EXISTING_USER_ID);
         verify(roleDao, never()).existsById(any());
         verify(roleDao, never()).getReferenceById(any());
-        verify(userDao).getReferenceById(EXISTING_USER_ID);
         verify(userDao, never()).save(any());
     }
 
@@ -342,10 +345,10 @@ public class UserServiceTest {
 
         assertEquals(ROLE_NOT_FOUND_MESSAGE, exception.getMessage());
         verify(userDao).existsById(EXISTING_USER_ID);
-        verify(roleDao, atLeastOnce()).existsById(any());
-        verify(userDao, never()).getReferenceById(EXISTING_USER_ID);
+        verify(roleDao).existsById(NOT_EXISTED_ROLE_ID);
+        verify(userDao, never()).getReferenceById(any());
         verify(roleDao, never()).getReferenceById(any());
-        verify(userDao, never()).save(existingUserEntity);
+        verify(userDao, never()).save(any());
     }
 
     @Test
@@ -365,12 +368,13 @@ public class UserServiceTest {
 
         assertNotNull(resultSetDtos);
         assertArrayEquals(expectedResult.toArray(), resultSetDtos.toArray());
-        verify(userDao).getReferenceById(any());
-        verify(roleDao).getReferenceById(any());
+        verify(userDao).getReferenceById(EXISTING_USER_ID);
         verify(userDao).existsById(EXISTING_USER_ID);
         verify(roleDao).existsById(ADMIN_ROLE_ID);
-        verify(userDao).save(any());
-        verify(roleConverter, times(5)).convert(any());
+        verify(userDao).save(eq(existingUserEntity));
+        verify(roleConverter, times(2)).convert(DEFAULT_ROLE);
+        verify(roleConverter, times(3)).convert(ADMIN_ROLE);
+        verify(roleDao).getReferenceById(ADMIN_ROLE_ID);
     }
 
     @Test
@@ -379,8 +383,8 @@ public class UserServiceTest {
                 () -> userService.addRoleToUser(NOT_EXIST_USER_ID, roleConverter.convert(ADMIN_ROLE)));
 
         assertEquals(USER_NOT_FOUND_MESSAGE, exception.getMessage());
-        verify(userDao).existsById(any());
-        verify(roleConverter).convert(any());
+        verify(userDao).existsById(NOT_EXIST_USER_ID);
+        verify(roleConverter).convert(ADMIN_ROLE);
         verify(userDao, never()).getReferenceById(any());
         verify(roleDao, never()).getReferenceById(any());
         verify(roleDao, never()).existsById(any());
@@ -400,8 +404,8 @@ public class UserServiceTest {
                 .addRoleToUser(EXISTING_USER_ID, notExistedRole));
 
         assertEquals(ROLE_NOT_FOUND_MESSAGE, exception.getMessage());
-        verify(userDao).existsById(any());
-        verify(roleDao).existsById(any());
+        verify(userDao).existsById(EXISTING_USER_ID);
+        verify(roleDao).existsById(NOT_EXISTED_ROLE_ID);
         verify(roleConverter, never()).convert(any());
         verify(userDao, never()).getReferenceById(any());
         verify(roleDao, never()).getReferenceById(any());
@@ -416,7 +420,7 @@ public class UserServiceTest {
                 () -> userService.addRoleToUser(NOT_EXIST_USER_ID, notExistedRole));
 
         assertEquals(USER_NOT_FOUND_MESSAGE, exception.getMessage());
-        verify(userDao).existsById(any());
+        verify(userDao).existsById(NOT_EXIST_USER_ID);
         verify(roleConverter, never()).convert(any());
         verify(userDao, never()).getReferenceById(any());
         verify(roleDao, never()).getReferenceById(any());
@@ -447,7 +451,7 @@ public class UserServiceTest {
         verify(userDao).getReferenceById(EXISTING_USER_ID);
         verify(credentialsDao).findByLogin(login);
         verify(credentialsService).getCredentials(existingUserEntity, credentialsDto);
-        verify(userDao).save(existingUserEntity);
+        verify(userDao).save(eq(existingUserEntity));
     }
 
     @Test
@@ -486,8 +490,8 @@ public class UserServiceTest {
 
         assertEquals(CREDENTIALS_CONFLICT_MESSAGE, exception.getMessage());
         assertNull(existingUserEntity.getCredentials());
-        verify(userDao).existsById(any());
-        verify(userDao).getReferenceById(any());
+        verify(userDao).existsById(EXISTING_USER_ID);
+        verify(userDao).getReferenceById(EXISTING_USER_ID);
         verify(credentialsDao).findByLogin(login);
         verify(credentialsService, never()).getCredentials(any(), any());
         verify(userDao, never()).save(any());
