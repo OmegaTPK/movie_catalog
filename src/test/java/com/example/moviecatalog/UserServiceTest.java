@@ -140,7 +140,7 @@ public class UserServiceTest {
         verify(userConverter).convertDtoToEntity(incomingDto);
         verify(userConverter).convertEntityToDto(savedNewUserEntity);
         verify(roleDao).getReferenceById(DEFAULT_ROLE_ID);
-        verify(userDao.save(userWithDefaultRole));
+        verify(userDao).save(userWithDefaultRole);
     }
 
     @Test
