@@ -2,6 +2,7 @@ package com.example.moviecatalog.dto;
 
 import com.example.moviecatalog.enums.Gender;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -11,6 +12,7 @@ import java.time.Instant;
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode
+@Builder
 public class ActorDto implements Serializable {
     private Long id;
     private String name;

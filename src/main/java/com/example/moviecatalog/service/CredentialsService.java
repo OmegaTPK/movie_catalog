@@ -28,6 +28,7 @@ public class CredentialsService {
     public CredentialsEntity getCredentials(UserEntity user, CredentialsDto dto) {
         CredentialsEntity result;
 
+        dto.setPassword(passHash(dto.getPassword()));
         if (user.getCredentials() != null) {
             result = user.getCredentials();
             credentialsConverter.fillFromDto(dto, result);
@@ -41,6 +42,7 @@ public class CredentialsService {
     public TokenDto getTokenFromCredentials(CredentialsDto credentialsDto) {
         String token;
 
+        credentialsDto.setPassword(passHash(credentialsDto.getPassword()));
         validateCredentials(credentialsDto);
 
         token = jwtProvider.generateToken(credentialsDto.getLogin());
@@ -73,4 +75,9 @@ public class CredentialsService {
 
         return user;
     }
+
+    private String passHash(String password) {
+        return passwordEncoder.encode(password);
+    }
+
 }

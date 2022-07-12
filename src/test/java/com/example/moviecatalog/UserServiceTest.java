@@ -21,8 +21,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -57,7 +55,6 @@ public class UserServiceTest {
     private final String ROLES_VALIDATIONS_FALSE_MESSAGE = "User must have at list one role!";
     private final String ROLE_NOT_FOUND_MESSAGE = "Role not found!";
     private final String CREDENTIALS_CONFLICT_MESSAGE = "User with this user name is already exist";
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     @Mock
     private CredentialsDao credentialsDao;
     @Mock
@@ -97,7 +94,7 @@ public class UserServiceTest {
                 null,
                 Boolean.TRUE);
         UserEntity newUserEntity = UserEntity.builder()
-                .Id(null)
+                .id(null)
                 .name(incomingDto.getName())
                 .description(incomingDto.getDescription())
                 .lastname(incomingDto.getLastname())
@@ -105,7 +102,7 @@ public class UserServiceTest {
                 .roles(new HashSet<>())
                 .build();
         UserEntity userWithDefaultRole = UserEntity.builder()
-                .Id(null)
+                .id(null)
                 .name(incomingDto.getName())
                 .description(incomingDto.getDescription())
                 .lastname(incomingDto.getLastname())
@@ -114,7 +111,7 @@ public class UserServiceTest {
                 .build();
         userWithDefaultRole.addRole(DEFAULT_ROLE);
         UserEntity savedNewUserEntity = UserEntity.builder()
-                .Id(OUTCOMING_USER_ID)
+                .id(OUTCOMING_USER_ID)
                 .name(incomingDto.getName())
                 .description(incomingDto.getDescription())
                 .lastname(incomingDto.getLastname())
@@ -152,13 +149,13 @@ public class UserServiceTest {
                 .name(newName)
                 .build();
         UserEntity existingUserEntity = UserEntity.builder()
-                .Id(EXISTING_USER_ID)
+                .id(EXISTING_USER_ID)
                 .name(existingName)
                 .roles(new HashSet<>())
                 .build();
         existingUserEntity.addRole(DEFAULT_ROLE);
         UserEntity updatedUserEntity = UserEntity.builder()
-                .Id(EXISTING_USER_ID)
+                .id(EXISTING_USER_ID)
                 .name(newName)
                 .roles(new HashSet<>())
                 .build();
@@ -195,12 +192,12 @@ public class UserServiceTest {
     @Test
     public void getAllUsers_getListOfUsersDTOs_setUserDto() {
         UserEntity existingUserEntity1 = UserEntity.builder()
-                .Id(11L)
+                .id(11L)
                 .roles(new HashSet<>())
                 .build();
         existingUserEntity1.addRole(DEFAULT_ROLE);
         UserEntity existingUserEntity2 = UserEntity.builder()
-                .Id(12L)
+                .id(12L)
                 .roles(new HashSet<>())
                 .build();
         existingUserEntity2.addRole(DEFAULT_ROLE);
@@ -224,7 +221,7 @@ public class UserServiceTest {
     public void getUsersRoles_existingUser_setRolesDTOs() {
 
         UserEntity existingUserEntity = UserEntity.builder()
-                .Id(EXISTING_USER_ID)
+                .id(EXISTING_USER_ID)
                 .roles(new HashSet<>())
                 .build();
         existingUserEntity.addRole(DEFAULT_ROLE);
@@ -256,7 +253,7 @@ public class UserServiceTest {
     @Test
     public void setUsersRoles_existingUserValidRolesSet_setRolesDTOs() {
         UserEntity existingUserEntity = UserEntity.builder()
-                .Id(EXISTING_USER_ID)
+                .id(EXISTING_USER_ID)
                 .roles(new HashSet<>())
                 .build();
         existingUserEntity.addRole(DEFAULT_ROLE);
@@ -312,7 +309,7 @@ public class UserServiceTest {
     @Test
     public void setUsersRoles_existingUserEmptyRolesSet_throwUserValidationException() {
         UserEntity existingUserEntity = UserEntity.builder()
-                .Id(EXISTING_USER_ID)
+                .id(EXISTING_USER_ID)
                 .roles(new HashSet<>())
                 .build();
         when(userDao.getReferenceById(EXISTING_USER_ID)).thenReturn(existingUserEntity);
@@ -331,7 +328,7 @@ public class UserServiceTest {
     @Test
     public void setUsersRoles_existingUserNotExistingRole_throwNotFoundException() {
         UserEntity existingUserEntity = UserEntity.builder()
-                .Id(EXISTING_USER_ID)
+                .id(EXISTING_USER_ID)
                 .roles(new HashSet<>())
                 .build();
         existingUserEntity.addRole(DEFAULT_ROLE);
@@ -354,7 +351,7 @@ public class UserServiceTest {
     @Test
     public void addRoleToUser_existingUserAndRole_updatedSetRoles() {
         UserEntity existingUserEntity = UserEntity.builder()
-                .Id(EXISTING_USER_ID)
+                .id(EXISTING_USER_ID)
                 .roles(new HashSet<>())
                 .build();
         existingUserEntity.addRole(DEFAULT_ROLE);
@@ -394,7 +391,7 @@ public class UserServiceTest {
     @Test
     public void addRoleToUser_ExistUserNotExistRole_RoleNotFoundException() {
         UserEntity existingUserEntity = UserEntity.builder()
-                .Id(EXISTING_USER_ID)
+                .id(EXISTING_USER_ID)
                 .roles(new HashSet<>())
                 .build();
         existingUserEntity.addRole(DEFAULT_ROLE);
@@ -433,7 +430,7 @@ public class UserServiceTest {
         String login = "test user";
         String pass = "pass";
         UserEntity existingUserEntity = UserEntity.builder()
-                .Id(EXISTING_USER_ID)
+                .id(EXISTING_USER_ID)
                 .build();
         CredentialsDto credentialsDto = new CredentialsDto(login, pass);
         CredentialsEntity credentialsEntity = new CredentialsEntity();
@@ -476,7 +473,7 @@ public class UserServiceTest {
         String login = "test user";
         String pass = "pass";
         UserEntity existingUserEntity = UserEntity.builder()
-                .Id(EXISTING_USER_ID)
+                .id(EXISTING_USER_ID)
                 .build();
         CredentialsDto credentialsDto = new CredentialsDto(login, pass);
         CredentialsEntity credentialsEntity = new CredentialsEntity();
@@ -502,7 +499,7 @@ public class UserServiceTest {
         String login = "test user";
         String pass = "pass";
         UserEntity existingUserEntity = UserEntity.builder()
-                .Id(EXISTING_USER_ID)
+                .id(EXISTING_USER_ID)
                 .build();
         CredentialsDto credentialsDto = new CredentialsDto(login, pass);
         CredentialsEntity credentialsEntity = new CredentialsEntity();

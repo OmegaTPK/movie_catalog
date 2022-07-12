@@ -3,6 +3,7 @@ package com.example.moviecatalog.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -12,12 +13,11 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
-@EqualsAndHashCode
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
-    private Long Id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -43,5 +43,18 @@ public class UserEntity {
 
     public void addRole(RoleEntity role) {
         roles.add(role);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserEntity user = (UserEntity) o;
+        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(lastname, user.lastname) && Objects.equals(description, user.description) && Objects.equals(active, user.active);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, lastname, description, active, credentials);
     }
 }

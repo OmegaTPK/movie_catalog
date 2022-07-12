@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -14,7 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
+@Builder
 public class ActorEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -46,4 +47,19 @@ public class ActorEntity {
     public void addMovie(MovieEntity movie) {
         this.movies.add(movie);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ActorEntity that = (ActorEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(surname, that.surname) && Objects.equals(middleName, that.middleName) && gender == that.gender && Objects.equals(birthDate, that.birthDate) && Objects.equals(activeStartDate, that.activeStartDate) && Objects.equals(birthPlace, that.birthPlace) && Objects.equals(description, that.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, surname, middleName, gender, birthDate, activeStartDate, birthPlace, description);
+    }
+
+
 }

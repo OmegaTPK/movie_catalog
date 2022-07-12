@@ -23,12 +23,12 @@ public class ActorService {
     private MovieDao movieDao;
 
     public ActorDto addActor(ActorDto dto) {
-        ActorEntity entityActor = actorConverter.convert(dto);
+        ActorEntity entityActor = actorConverter.convertDtoToEntity(dto);
 
         entityActor.setId(null);
-        actorDao.save(entityActor);
+        entityActor = actorDao.save(entityActor);
 
-        return actorConverter.convert(entityActor);
+        return actorConverter.convertEntityToDto(entityActor);
     }
 
     public ActorDto updateActor(ActorDto dto, Long id) {
@@ -40,7 +40,7 @@ public class ActorService {
         entityActor = actorDao.getReferenceById(id);
         actorConverter.fillEntityFromDto(dto, entityActor);
 
-        result = actorConverter.convert(actorDao.save(entityActor));
+        result = actorConverter.convertEntityToDto(actorDao.save(entityActor));
         return result;
     }
 
@@ -57,20 +57,20 @@ public class ActorService {
         actorEntity.addMovie(movieEntity);
         actorEntity = actorDao.save(actorEntity);
 
-        result = actorConverter.convert(actorEntity);
+        result = actorConverter.convertEntityToDto(actorEntity);
         return result;
     }
 
     public Set<ActorDto> getActorsPlayedInMovie(Long movieId) {
         Set<ActorDto> result;
-        MovieEntity movie = movieDao.getReferenceById(movieId);
-
         checkExistingOfMovie(movieId);
+
+        MovieEntity movie = movieDao.getReferenceById(movieId);
 
         result = movie.
                 getActors().
                 stream().
-                map(actorConverter::convert).
+                map(actorConverter::convertEntityToDto).
                 collect(Collectors.toSet());
 
         return result;
@@ -80,10 +80,9 @@ public class ActorService {
         return actorDao
                 .findAll()
                 .stream()
-                .map(actorConverter::convert)
+                .map(actorConverter::convertEntityToDto)
                 .collect(Collectors.toSet());
     }
-
 
     private void checkExistingOfActor(Long actorId) {
         if (!actorDao.existsById(actorId)) {

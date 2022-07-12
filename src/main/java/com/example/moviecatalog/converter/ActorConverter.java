@@ -9,7 +9,7 @@ import java.util.HashSet;
 @Component
 public class ActorConverter {
 
-    public ActorDto convert(ActorEntity entity) {
+    public ActorDto convertEntityToDto(ActorEntity entity) {
         //TODO make DTOs have a linked movies
         return new ActorDto(entity.getId(),
                 entity.getName(),
@@ -22,7 +22,7 @@ public class ActorConverter {
                 entity.getDescription());
     }
 
-    public ActorEntity convert(ActorDto dto) {
+    public ActorEntity convertDtoToEntity(ActorDto dto) {
         //TODO make DTOs have a linked movies
         return new ActorEntity(dto.getId(),
                 dto.getName(),
