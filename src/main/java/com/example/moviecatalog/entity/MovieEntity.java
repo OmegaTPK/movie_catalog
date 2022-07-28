@@ -1,13 +1,11 @@
 package com.example.moviecatalog.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -15,6 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class MovieEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -41,5 +40,18 @@ public class MovieEntity {
 
     public void addActor(ActorEntity actorEntity) {
         this.actors.add(actorEntity);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MovieEntity that = (MovieEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(year, that.year) && Objects.equals(description, that.description) && Objects.equals(rate, that.rate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, year, description, rate);
     }
 }

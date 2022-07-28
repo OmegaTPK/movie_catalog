@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @Component
 public class MovieConverter {
 
-    public MovieDto convert(MovieEntity movieEntity) {
+    public MovieDto convertEntityToDto(MovieEntity movieEntity) {
         //TODO make DTOs have a linked actors
         return new MovieDto(movieEntity.getId()
                 , movieEntity.getName()
@@ -22,11 +22,11 @@ public class MovieConverter {
 
     public List<MovieDto> convertEntities(List<MovieEntity> movieDtoList) {
         return movieDtoList.stream()
-                .map(this::convert)
+                .map(this::convertEntityToDto)
                 .collect(Collectors.toList());
     }
 
-    public MovieEntity convert(MovieDto movieDto) {
+    public MovieEntity convertDtoToEntity(MovieDto movieDto) {
         //TODO make DTOs have a linked actors
         return new MovieEntity(movieDto.getId()
                 , movieDto.getName()
@@ -38,7 +38,7 @@ public class MovieConverter {
 
     public List<MovieEntity> convertDtos(List<MovieDto> movieDtoList) {
         return movieDtoList.stream()
-                .map(this::convert)
+                .map(this::convertDtoToEntity)
                 .collect(Collectors.toList());
     }
 

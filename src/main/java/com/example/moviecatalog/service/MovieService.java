@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class MovieService {
 
-    private MovieDao movieDao;
-    private MovieConverter movieConverter;
-    private ActorDao actorDao;
+    private final MovieDao movieDao;
+    private final MovieConverter movieConverter;
+    private final ActorDao actorDao;
 
     public List<MovieDto> getMovies() {
         List<MovieEntity> entities = movieDao.findAll();
@@ -30,12 +30,12 @@ public class MovieService {
     }
 
     public MovieDto addMovie(@NonNull MovieDto movieDto) {
-        MovieEntity movieEntity = movieConverter.convert(movieDto);
+        MovieEntity movieEntity = movieConverter.convertDtoToEntity(movieDto);
 
         movieEntity.setId(null);
         movieEntity = movieDao.save(movieEntity);
 
-        return movieConverter.convert(movieEntity);
+        return movieConverter.convertEntityToDto(movieEntity);
     }
 
     public void deleteMovie(@NonNull Long id) {
@@ -52,7 +52,7 @@ public class MovieService {
         entity = movieDao.getReferenceById(id);
 
         movieConverter.fillEntityFromDto(dto, entity);
-        result = movieConverter.convert(movieDao.save(entity));
+        result = movieConverter.convertEntityToDto(movieDao.save(entity));
 
         return result;
     }
@@ -70,7 +70,7 @@ public class MovieService {
         movieEntity.addActor(actorEntity);
         movieEntity = movieDao.save(movieEntity);
 
-        result = movieConverter.convert(movieEntity);
+        result = movieConverter.convertEntityToDto(movieEntity);
 
         return result;
     }
@@ -85,7 +85,7 @@ public class MovieService {
         result = actor.
                 getMovies().
                 stream().
-                map(movieConverter::convert).
+                map(movieConverter::convertEntityToDto).
                 collect(Collectors.toSet());
 
         return result;

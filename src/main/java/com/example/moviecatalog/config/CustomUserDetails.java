@@ -1,32 +1,19 @@
 package com.example.moviecatalog.config;
 
-import com.example.moviecatalog.entity.CredentialsEntity;
-import com.example.moviecatalog.entity.UserEntity;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
+@Builder
+@EqualsAndHashCode
 public class CustomUserDetails implements UserDetails {
 
     private String login;
     private String password;
     private Collection<? extends GrantedAuthority> grantedAuthorities;
-
-    public static CustomUserDetails fromUserEntityToCustomUserDetails(UserEntity userEntity) {
-        CustomUserDetails c = new CustomUserDetails();
-        CredentialsEntity credentials = userEntity.getCredentials();
-        c.login = credentials.getLogin();
-        c.password = credentials.getPassword();
-        c.grantedAuthorities = userEntity
-                .getRoles()
-                .stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toSet());
-        return c;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -63,3 +50,4 @@ public class CustomUserDetails implements UserDetails {
         return true;
     }
 }
+
